@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../store/Slices/AuthSlice.js";
 import Input from "./Input";
 import Button from "./Button";
-import { Apple } from "lucide-react";
 import GoogleSSOButton from "./GoogleSSOButton.jsx";
 
 function SignUp() {

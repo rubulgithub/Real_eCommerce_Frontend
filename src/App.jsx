@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import Navbar from "./components/Header/Navbar";
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { currentUser } from "./store/Slices/AuthSlice";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const dispatch = useDispatch();
+  const authStatus = useSelector((state) => state.auth.status);
+  console.log("status", authStatus);
+
+  useEffect(() => {
+    console.log("Dispatching currentUser...");
+    dispatch(currentUser());
+  }, [dispatch]);
 
   return (
     <>

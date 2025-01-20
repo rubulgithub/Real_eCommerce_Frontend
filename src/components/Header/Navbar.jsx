@@ -1,15 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ChevronRight, ShoppingCart, Search as SearchIcon } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { userLogout } from "../../store/Slices/AuthSlice";
 
 export default function Navbar() {
+  const authStatus = useSelector((state) => state.auth.status);
   const [isExpanded, setIsExpanded] = useState(false);
   const [visibleItems, setVisibleItems] = useState(5);
+  const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  console.log("authStatus Navbar", authStatus);
+
   const isAuthPage =
     location.pathname === "/signup" || location.pathname === "/login";
 
-  // Define navigation items
+  const logout = async () => {
+    await dispatch(userLogout());
+    navigate("/");
+  };
+
   const navItems = [
     { name: "Women's Clothing", path: "/womens-clothing" },
     { name: "Sports", path: "/sports" },
@@ -21,14 +33,13 @@ export default function Navbar() {
     { name: "Men's Clothing", path: "/mens-clothing" },
   ];
 
-  // Set the number of visible items based on screen size
   useEffect(() => {
     const updateVisibleItems = () => {
       setVisibleItems(window.innerWidth >= 1024 ? 10 : 5);
     };
 
     updateVisibleItems(); // Initialize on mount
-    window.addEventListener("resize", updateVisibleItems); // Update on resize
+    window.addEventListener("resize", updateVisibleItems);
 
     return () => window.removeEventListener("resize", updateVisibleItems); // Cleanup
   }, []);
@@ -52,54 +63,62 @@ export default function Navbar() {
             </Link>
           </div>
           <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
-            <Link
-              to="/signup"
-              className="text-[10px] sm:text-sm hover:text-pink-500"
-            >
-              SIGN UP
-            </Link>
-            <Link
-              to="/login"
-              className="text-[10px] sm:text-sm hover:text-pink-500"
-            >
-              LOGIN
-            </Link>
+            {authStatus ? (
+              <div
+                className="text-[10px] sm:text-sm hover:text-pink-500 cursor-pointer"
+                onClick={logout}
+              >
+                LOGOUT
+              </div>
+            ) : (
+              <>
+                <Link
+                  to="/signup"
+                  className="text-[10px] sm:text-sm hover:text-pink-500"
+                >
+                  SIGN UP
+                </Link>
+                <Link
+                  to="/login"
+                  className="text-[10px] sm:text-sm hover:text-pink-500"
+                >
+                  LOGIN
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Main header with shadow */}
+      {/* Main header */}
       <div className="border-b bg-white px-4">
         <div className="w-full max-w-screen-xl mx-auto py-2 sm:py-4 flex items-center justify-between">
           <div className="flex items-center gap-4 sm:gap-6">
-            {/* Logo */}
             <Link
               to="/"
               className="text-pink-600 text-[19px] sm:text-xl md:text-3xl font-bold whitespace-nowrap"
             >
               VIPSHOP
             </Link>
-
             {!isAuthPage && (
-              /* Trust badges */
               <div className="hidden sm:flex items-center gap-6 whitespace-nowrap">
-                <div className="flex items-center gap-1 text-[10px] sm:text-xs lg:text-sm shrink-0">
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 rounded-full border-2 border-pink-500 flex items-center justify-center">
+                <div className="flex items-center gap-1 text-[10px] sm:text-xs lg:text-sm">
+                  <div className="w-3 h-3 rounded-full border-2 border-pink-500 flex items-center justify-center">
                     ✓
                   </div>
-                  <span className="hidden sm:inline">100% Authentic</span>
+                  <span>100% Authentic</span>
                 </div>
-                <div className="flex items-center gap-1 text-[10px] sm:text-xs lg:text-sm shrink-0">
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 rounded-full border-2 border-pink-500 flex items-center justify-center">
+                <div className="flex items-center gap-1 text-[10px] sm:text-xs lg:text-sm">
+                  <div className="w-3 h-3 rounded-full border-2 border-pink-500 flex items-center justify-center">
                     ✓
                   </div>
-                  <span className="hidden sm:inline">Free Shipping</span>
+                  <span>Free Shipping</span>
                 </div>
-                <div className="flex items-center gap-1 text-[10px] sm:text-xs lg:text-sm shrink-0">
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 rounded-full border-2 border-pink-500 flex items-center justify-center">
+                <div className="flex items-center gap-1 text-[10px] sm:text-xs lg:text-sm">
+                  <div className="w-3 h-3 rounded-full border-2 border-pink-500 flex items-center justify-center">
                     ✓
                   </div>
-                  <span className="hidden sm:inline">Free Return</span>
+                  <span>Free Return</span>
                 </div>
               </div>
             )}
@@ -109,10 +128,10 @@ export default function Navbar() {
               <div className="relative w-48 sm:w-80 md:w-96">
                 <input
                   type="search"
-                  placeholder="DPLAY"
-                  className="w-full pl-3 pr-10 py-1.5 sm:pl-4 sm:pr-12 sm:py-2 rounded-[4px] border border-gray-200  focus:outline-none focus:border-pink-500"
+                  placeholder="Search"
+                  className="w-full pl-3 pr-10 py-1.5 rounded-[4px] border border-gray-200 focus:outline-none focus:border-pink-500"
                 />
-                <button className="absolute right-0 top-0 rounded-r-[4px] h-full px-4 bg-pink-600 text-white">
+                <button className="absolute right-0 top-0 h-full px-4 bg-pink-600 text-white">
                   <SearchIcon className="h-5 w-5" />
                 </button>
               </div>
@@ -123,32 +142,6 @@ export default function Navbar() {
                 <ShoppingCart className="h-6 w-6" />
                 <span className="ml-1">Cart</span>
               </Link>
-            </div>
-          )}
-
-          {isAuthPage && (
-            <div className="flex-1 flex justify-end">
-              {/* Trust badges for auth pages */}
-              <div className="flex items-center gap-1 md:gap-3 lg:gap-4 whitespace-nowrap overflow-x-auto">
-                <div className="flex items-center gap-1 text-[10px] sm:text-xs lg:text-sm shrink-0">
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 rounded-full border-2 border-pink-500 flex items-center justify-center">
-                    ✓
-                  </div>
-                  <span>100% Authentic</span>
-                </div>
-                <div className="flex items-center gap-1 text-[10px] sm:text-xs lg:text-sm shrink-0">
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 rounded-full border-2 border-pink-500 flex items-center justify-center">
-                    ✓
-                  </div>
-                  <span>Free Shipping</span>
-                </div>
-                <div className="flex items-center gap-1 text-[10px] sm:text-xs lg:text-sm shrink-0">
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 rounded-full border-2 border-pink-500 flex items-center justify-center">
-                    ✓
-                  </div>
-                  <span>Free Return</span>
-                </div>
-              </div>
             </div>
           )}
         </div>
@@ -171,7 +164,6 @@ export default function Navbar() {
                     </Link>
                   </li>
                 ))}
-              {/* Chevron button to toggle additional items */}
               <li>
                 <button
                   onClick={() => setIsExpanded(!isExpanded)}

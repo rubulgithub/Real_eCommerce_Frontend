@@ -1,14 +1,45 @@
 import React, { useState } from "react";
 import Input from "./Input";
 import Button from "./Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import GoogleSSOButton from "./GoogleSSOButton";
+import { useDispatch, useSelector } from "react-redux";
+import { currentUser, userLogin } from "../store/Slices/AuthSlice";
+import { toast } from "react-toastify";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const status = useSelector((state) => state.auth.status);
+  // console.log("auth", status);
+
   const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignIn = () => {};
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+
+    // Dispatch the loginUser action and wait for the result
+    const response = await dispatch(
+      userLogin({
+        email: emailOrUsername,
+        username: emailOrUsername,
+        password,
+      })
+    );
+    // // console.log("login res", response);
+    // const user = await dispatch(currentUser());
+    // // console.log("login user", user);
+
+    if (response?.payload) {
+      navigate("/");
+    } else {
+      // Login failed
+      toast.error(result.error.message || "Login failed. Please try again.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-400 to-green-400 flex items-center justify-center p-4">
       <div className="w-full max-w-6xl grid md:grid-cols-2 gap-8 items-center">
@@ -73,7 +104,7 @@ const Login = () => {
             />
 
             <Button type="submit" bgColor="bg-blue-600" textColor="text-white">
-              SIGN UP
+              LOG IN
             </Button>
 
             <div className="text-center">

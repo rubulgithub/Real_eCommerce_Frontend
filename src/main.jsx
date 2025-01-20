@@ -1,4 +1,4 @@
-import React, { StrictMode } from "react";
+import React from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
@@ -11,6 +11,8 @@ import EmailVerification from "./components/EmailVerification.jsx";
 import Home from "./components/page/Home.jsx";
 import OAuthRedirectHandler from "./components/OAuthRedirectHandler.jsx";
 import GoogleSSOFailure from "./components/GoogleSSOFailure.jsx";
+import AuthLayout from "./components/AuthLayout.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +42,14 @@ const router = createBrowserRouter([
       {
         path: "/failure",
         element: <GoogleSSOFailure />,
+      },
+      {
+        path: "/private",
+        element: (
+          <AuthLayout authentication={true}>
+            <PrivateRoute />
+          </AuthLayout>
+        ),
       },
     ],
   },
