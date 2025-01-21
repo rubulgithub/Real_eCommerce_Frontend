@@ -5,9 +5,9 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-const privateInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true,
-});
+// const privateInstance = axios.create({
+//   baseURL: import.meta.env.VITE_API_URL,
+//   withCredentials: true,
+// });
 
-export { axiosInstance, privateInstance };
+export { axiosInstance };

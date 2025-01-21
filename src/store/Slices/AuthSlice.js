@@ -1,11 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { axiosInstance, privateInstance } from "../../helpers/Api.js";
+import { axiosInstance } from "../../helpers/Api.js";
 
 const initialState = {
   user: null,
-  accessToken: null,
-  refreshToken: null,
   status: false,
   isLoading: false,
 };
@@ -53,23 +51,9 @@ export const userLogin = createAsyncThunk("login", async (data) => {
   }
 });
 
-export const userRefreshToken = createAsyncThunk("refreshToken", async () => {
-  try {
-    const response = await axiosInstance.post("/users/refresh-token");
-
-    const { refreshToken } = response.data.data;
-    console.log("refreshToken", refreshToken);
-    toast.success("refresh Token fetched successfully");
-    return refreshToken;
-  } catch (error) {
-    console.log("error", error);
-    toast.error(error?.response?.data?.message || "refreshed failed");
-  }
-});
-
 export const userLogout = createAsyncThunk("logout", async () => {
   try {
-    const response = await privateInstance.post("/users/logout");
+    const response = await axiosInstance.post("/users/logout");
 
     const { user } = response.data.data;
     console.log("data", user);
@@ -82,21 +66,40 @@ export const userLogout = createAsyncThunk("logout", async () => {
   }
 });
 
-//Current user
-export const currentUser = createAsyncThunk("currentUser", async () => {
-  try {
-    const response = await privateInstance.get("/users/current-user");
-
-    const currentUser = response.data.data;
-    console.log("currrent user", currentUser);
-    toast.success("Get your profile");
-    return currentUser;
-  } catch (error) {
-    console.log("error", error);
-    toast.error(error?.response?.data?.message || "user data not found");
+// Current user
+export const currentUser = createAsyncThunk(
+  "currentUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/users/current-user");
+      const currentUser = response.data.data;
+      console.log("current user", currentUser);
+      toast.success("Welcome Back!");
+      return currentUser;
+    } catch (error) {
+      console.log("error", error);
+      toast.error(
+        error?.response?.data?.message ||
+          "User data not found or session expired"
+      );
+      return rejectWithValue(error.response?.data); // Reject properly
+    }
   }
-});
+);
 
+// Revalidate user
+export const revalidateUser = createAsyncThunk(
+  "auth/revalidateUser",
+  async (_, { dispatch }) => {
+    try {
+      // Reuse currentUser logic
+      await dispatch(currentUser());
+    } catch {
+      // Optional: Handle cases where revalidation fails
+      console.error("User revalidation failed");
+    }
+  }
+);
 // Async thunk to handle email verification
 export const verifyEmail = createAsyncThunk("verifyEmail", async (token) => {
   try {
@@ -133,17 +136,6 @@ const authSlice = createSlice({
       .addCase(userLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload;
-        state.accessToken = action.payload.accessToken;
-        state.refreshToken = action.payload.refreshToken;
-        state.status = true;
-      })
-      .addCase(userRefreshToken.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(userRefreshToken.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.accessToken = action.payload.accessToken;
-        state.refreshToken = action.payload.refreshToken;
         state.status = true;
       })
       .addCase(userLogout.pending, (state) => {
@@ -161,6 +153,11 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload;
         state.status = true;
+      })
+      .addCase(currentUser.rejected, (state) => {
+        state.isLoading = false;
+        state.user = null;
+        state.status = false;
       })
       .addCase(verifyEmail.pending, (state) => {
         state.isLoading = true;

@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../store/Slices/AuthSlice.js";
 import Input from "./Input";
 import Button from "./Button";
+import { useNavigate } from "react-router-dom";
 import GoogleSSOButton from "./GoogleSSOButton.jsx";
 
 function SignUp() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { isLoading, error } = useSelector((state) => state.auth);
 
   const [emailOrPhone, setEmailOrPhone] = useState("");
@@ -40,7 +42,7 @@ function SignUp() {
     console.log("response", response);
 
     // Check if registration was successful
-    if (action.type === "registerUser/fulfilled") {
+    if (response.type === "registerUser/fulfilled") {
       // Clear the fields after successful signup
       setEmailOrPhone("");
       setUsername("");
