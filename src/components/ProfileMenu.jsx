@@ -1,21 +1,24 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { userLogout } from "../store/Slices/AuthSlice";
 import {
+  User,
   FileText,
   Heart,
-  User,
   MapPin,
   Ticket,
   MessageCircle,
   Gift,
   LogOut,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 
 const ProfileMenu = () => {
-  const avatar = useSelector((state) => state.auth.user.avatar);
+  const userName = useSelector((state) => state.auth.user.username);
   const [isOpen, setIsOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const menuRef = useRef(null);
@@ -25,7 +28,12 @@ const ProfileMenu = () => {
   };
 
   const handleMouseEnter = () => {
+    setIsHovered(true);
     setIsOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
   };
 
   const handleClickOutside = (event) => {
@@ -34,38 +42,50 @@ const ProfileMenu = () => {
     }
   };
 
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside, false);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, false);
+    };
+  }, [handleClickOutside]); // Added handleClickOutside to dependencies
+
   const logout = async () => {
     await dispatch(userLogout());
     navigate("/");
   };
 
   const menuItems = [
+    { icon: User, text: "My Profile", path: "/profile-page" },
     { icon: FileText, text: "My Orders", path: "/orders" },
     { icon: Heart, text: "My Likes", path: "/likes" },
-    { icon: User, text: "My Profile", path: "/profile" },
     { icon: MapPin, text: "My Address", path: "/address" },
     { icon: Ticket, text: "My Vouchers", path: "/vouchers" },
     { icon: MessageCircle, text: "Customer Care", path: "/customer-care" },
     { icon: Gift, text: "VIP Affiliate Club", path: "/vip-affiliate" },
   ];
 
-  React.useEffect(() => {
-    document.addEventListener("click", handleClickOutside, false);
-    return () => {
-      document.removeEventListener("click", handleClickOutside, false);
-    };
-  }, []);
-
   return (
-    <div className="relative" onMouseEnter={handleMouseEnter} ref={menuRef}>
-      <img
-        src={avatar}
-        className="z-10 w-10 h-10 rounded-full cursor-pointer"
+    <div
+      className="relative z-50"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      ref={menuRef}
+    >
+      <div
+        className="flex items-center gap-2 px-3 py-2 rounded-md cursor-pointer transition-all duration-200 hover:bg-gray-100"
         onClick={toggleMenu}
-      />
+      >
+        <User className="w-4 h-4 text-gray-600" />
+        <span className="font-medium text-gray-900">{userName}</span>
+        {isHovered ? (
+          <ChevronUp className="w-4 h-4 text-gray-600" />
+        ) : (
+          <ChevronDown className="w-4 h-4 text-gray-600" />
+        )}
+      </div>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20">
+        <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
           <div
             className="py-1"
             role="menu"

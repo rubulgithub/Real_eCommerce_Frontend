@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ChevronRight, ShoppingCart, Search as SearchIcon } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { userLogout } from "../../store/Slices/AuthSlice";
+import ProfileMenu from "../ProfileMenu";
 
 export default function Navbar() {
   const authStatus = useSelector((state) => state.auth.status);
@@ -16,11 +16,6 @@ export default function Navbar() {
 
   const isAuthPage =
     location.pathname === "/signup" || location.pathname === "/login";
-
-  const logout = async () => {
-    await dispatch(userLogout());
-    navigate("/");
-  };
 
   const navItems = [
     { name: "Women's Clothing", path: "/womens-clothing" },
@@ -64,11 +59,8 @@ export default function Navbar() {
           </div>
           <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
             {authStatus ? (
-              <div
-                className="text-[10px] sm:text-sm hover:text-pink-500 cursor-pointer"
-                onClick={logout}
-              >
-                LOGOUT
+              <div className="text-[10px] sm:text-sm hover:text-pink-500 cursor-pointer">
+                <ProfileMenu />
               </div>
             ) : (
               <>

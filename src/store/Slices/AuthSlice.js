@@ -78,10 +78,7 @@ export const currentUser = createAsyncThunk(
       return currentUser;
     } catch (error) {
       console.log("error", error);
-      toast.error(
-        error?.response?.data?.message ||
-          "User data not found or session expired"
-      );
+      toast.error("Please log in again");
       return rejectWithValue(error.response?.data); // Reject properly
     }
   }
