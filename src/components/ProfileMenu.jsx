@@ -47,7 +47,7 @@ const ProfileMenu = () => {
     return () => {
       document.removeEventListener("click", handleClickOutside, false);
     };
-  }, [handleClickOutside]); // Added handleClickOutside to dependencies
+  }, [handleClickOutside]);
 
   const logout = async () => {
     await dispatch(userLogout());

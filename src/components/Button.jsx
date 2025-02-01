@@ -1,9 +1,17 @@
 import React from "react";
 
-function Button({ children, onClick, bgColor, textColor, ...props }) {
+function Button({
+  type = "button",
+  children,
+  onClick,
+  bgColor,
+  textColor,
+  ...props
+}) {
   return (
     <button
       onClick={onClick}
+      type={type}
       className={`${bgColor} ${textColor} w-full py-2 rounded-lg font-medium transition-colors`}
       {...props}
     >

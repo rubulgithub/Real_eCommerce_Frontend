@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ChevronRight, ShoppingCart, Search as SearchIcon } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import ProfileMenu from "../ProfileMenu";
 
 export default function Navbar() {
   const authStatus = useSelector((state) => state.auth.status);
   const [isExpanded, setIsExpanded] = useState(false);
   const [visibleItems, setVisibleItems] = useState(5);
-  const dispatch = useDispatch();
+
   const location = useLocation();
-  const navigate = useNavigate();
 
   console.log("authStatus Navbar", authStatus);
 

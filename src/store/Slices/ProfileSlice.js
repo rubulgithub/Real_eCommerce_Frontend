@@ -5,8 +5,6 @@ import { axiosInstance } from "../../helpers/Api.js";
 const initialState = {
   UserProfile: null,
   isLoading: false,
-  isProfileUpdated: false,
-  profileUpdateError: null,
   status: false,
 };
 
@@ -32,6 +30,9 @@ export const updateUserProfile = createAsyncThunk(
       const response = await axiosInstance.patch(
         "/ecommerce/profile",
         updatedProfile
+      );
+      toast.success(
+        response?.data?.message || "Your profile updated successfullyy"
       );
       return response.data.data;
     } catch (error) {
@@ -72,13 +73,11 @@ const profileSlice = createSlice({
       .addCase(updateUserProfile.fulfilled, (state, action) => {
         state.isLoading = false;
         state.UserProfile = action.payload;
-        state.isProfileUpdated = true;
-        state.profileUpdateError = null;
+        state.status = true;
       })
       .addCase(updateUserProfile.rejected, (state, action) => {
         state.isLoading = false;
-        state.isProfileUpdated = false;
-        state.profileUpdateError = action.payload;
+        state.status = false;
       });
   },
 });
