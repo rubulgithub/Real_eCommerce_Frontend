@@ -1,0 +1,22 @@
+:root {
+  --primary-color: #0095e5;
+  --primary-hover: #0084cc;
+}
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Add smooth transitions */
+.transition-all {
+  transition: all 0.3s ease-in-out;
+}

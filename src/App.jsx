@@ -1,3 +1,4 @@
+// App.jsx
 import React, { useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { ToastContainer } from "react-toastify";
@@ -20,11 +21,15 @@ const App = React.memo(() => {
   }, [initializeUser]);
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <AppRoute />
+      <main className="flex-grow">
+        <div className="w-full px-4 md:px-6 lg:px-8">
+          <AppRoute />
+        </div>
+      </main>
       <ToastContainer {...toastConfig} />
-    </>
+    </div>
   );
 });
 

@@ -17,7 +17,6 @@ import {
 export default function ProfileDesign() {
   const dispatch = useDispatch();
   const { UserProfile, isLoading } = useSelector((state) => state.profile);
-  console.log("User Profile", UserProfile);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",

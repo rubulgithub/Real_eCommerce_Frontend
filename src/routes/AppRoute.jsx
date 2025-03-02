@@ -3,18 +3,25 @@ import React, { lazy, Suspense } from "react";
 
 // Lazy load components
 const Layout = lazy(() => import("../Layout.jsx"));
-import Loader from "../components/Loader";
-const AuthLayout = lazy(() => import("../components/AuthLayout"));
-const Home = lazy(() => import("../components/page/Home"));
-const SignUp = lazy(() => import("../components/SignUp"));
-const Login = lazy(() => import("../components/Login"));
-const EmailVerification = lazy(() => import("../components/EmailVerification"));
-const OAuthRedirectHandler = lazy(() =>
-  import("../components/OAuthRedirectHandler")
+import Loader from "../components/Loader.jsx";
+import CulturalProductsPage from "../components/page/CulturalProductsPage.jsx";
+import { AdminLayout } from "../components/AdminDashboard/AdminLayout.jsx";
+import { UsersDashboard } from "../components/AdminDashboard/UsersDashboard.jsx";
+const AuthLayout = lazy(() => import("../components/AuthLayout.jsx"));
+const Home = lazy(() => import("../components/page/Home.jsx"));
+const SignUp = lazy(() => import("../components/SignUp.jsx"));
+const Login = lazy(() => import("../components/Login.jsx"));
+const EmailVerification = lazy(() =>
+  import("../components/EmailVerification.jsx")
 );
-const PrivateRoute = lazy(() => import("../components/PrivateRoute"));
-const GoogleSSOFailure = lazy(() => import("../components/GoogleSSOFailure"));
-const ProfilePage = lazy(() => import("../components/page/ProfilePage"));
+const OAuthRedirectHandler = lazy(() =>
+  import("../components/OAuthRedirectHandler.jsx")
+);
+const PrivateRoute = lazy(() => import("../components/PrivateRoute.jsx"));
+const GoogleSSOFailure = lazy(() =>
+  import("../components/GoogleSSOFailure.jsx")
+);
+const ProfilePage = lazy(() => import("../components/page/ProfilePage.jsx"));
 
 // Route configurationsload
 const ROUTES = {
@@ -26,6 +33,9 @@ const ROUTES = {
   FAILURE: "/failure",
   PRIVATE: "/private",
   PROFILE_PAGE: "/profile-page",
+  ADMIN: "/admin",
+  UserDashboard: "/admin/users",
+  CULTURALPRODUCT: "/cultural-products",
 };
 
 const AppRoute = () => (
@@ -94,6 +104,25 @@ const AppRoute = () => (
         element={
           <AuthLayout authentication>
             <ProfilePage />
+          </AuthLayout>
+        }
+      />
+      <Route
+        path={ROUTES.ADMIN}
+        element={
+          <AuthLayout authentication>
+            <AdminLayout />
+          </AuthLayout>
+        }
+      >
+        <Route path="users" element={<UsersDashboard />} />
+      </Route>
+
+      <Route
+        path={ROUTES.CULTURALPRODUCT}
+        element={
+          <AuthLayout authentication={false}>
+            <CulturalProductsPage />
           </AuthLayout>
         }
       />

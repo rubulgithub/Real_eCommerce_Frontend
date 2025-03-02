@@ -4,10 +4,12 @@ import { axiosInstance } from "../../helpers/Api.js";
 
 const initialState = {
   user: null,
+  users: [],
+  totalUsers: 0,
   status: false,
   isLoading: false,
+  userStats: null,
 };
-
 // Async thunk to handle the signup
 export const registerUser = createAsyncThunk(
   "registerUser",
@@ -22,8 +24,6 @@ export const registerUser = createAsyncThunk(
       toast.success(
         "Verification email has been sent. Please check your inbox."
       );
-      // console.log("Store response", response);
-      // console.log("data response", response.data);
       return response.data.user;
     } catch (error) {
       toast.error(
@@ -40,9 +40,7 @@ export const registerUser = createAsyncThunk(
 export const userLogin = createAsyncThunk("login", async (data) => {
   try {
     const response = await axiosInstance.post("/users/login", data);
-
     const { user } = response.data.data;
-    console.log("data", user);
     toast.success("Logged in successfully");
     return user;
   } catch (error) {
@@ -73,7 +71,6 @@ export const currentUser = createAsyncThunk(
     try {
       const response = await axiosInstance.get("/users/current-user");
       const currentUser = response.data.data;
-      console.log("current user", currentUser);
       toast.success("Welcome Back!");
       return currentUser;
     } catch (error) {
@@ -89,14 +86,13 @@ export const revalidateUser = createAsyncThunk(
   "auth/revalidateUser",
   async (_, { dispatch }) => {
     try {
-      // Reuse currentUser logic
       await dispatch(currentUser());
     } catch {
-      // Optional: Handle cases where revalidation fails
       console.error("User revalidation failed");
     }
   }
 );
+
 // Async thunk to handle email verification
 export const verifyEmail = createAsyncThunk("verifyEmail", async (token) => {
   try {
@@ -112,6 +108,49 @@ export const verifyEmail = createAsyncThunk("verifyEmail", async (token) => {
     return rejectWithValue(error.response?.data);
   }
 });
+
+export const getAllUsers = createAsyncThunk(
+  "getAllUsers",
+  async ({ page = 1, limit = 10, search = "" }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `users/admin/users?page=${page}&limit=${limit}&search=${search}`
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const updateUserRole = createAsyncThunk(
+  "updateUserRole",
+  async ({ userId, role }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.patch(
+        `users/admin/users/${userId}/role`,
+        { role }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchUserStats = createAsyncThunk(
+  "auth/fetchUserStats",
+  async (period = "7d", { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(
+        `users/admin/users/stats?period=${period}`
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -162,6 +201,30 @@ const authSlice = createSlice({
       })
       .addCase(verifyEmail.fulfilled, (state, action) => {
         state.isLoading = false;
+      })
+
+      .addCase(getAllUsers.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.users = action.payload.data.users;
+        state.totalUsers = action.payload.data.totalUsers;
+      })
+      .addCase(getAllUsers.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(updateUserRole.fulfilled, (state, action) => {
+        if (state.user?._id === action.meta.arg.userId) {
+          state.user.role = action.meta.arg.role;
+        }
+      })
+      .addCase(fetchUserStats.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchUserStats.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.userStats = action.payload.data;
       });
   },
 });

@@ -13,10 +13,11 @@ import {
   LogOut,
   ChevronDown,
   ChevronUp,
+  LayoutDashboard,
 } from "lucide-react";
 
 const ProfileMenu = () => {
-  const userName = useSelector((state) => state.auth.user.username);
+  const user = useSelector((state) => state.auth.user);
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const dispatch = useDispatch();
@@ -56,6 +57,9 @@ const ProfileMenu = () => {
 
   const menuItems = [
     { icon: User, text: "My Profile", path: "/profile-page" },
+    ...(user?.role === "ADMIN"
+      ? [{ icon: LayoutDashboard, text: "Dashboard", path: "/admin" }]
+      : []),
     { icon: FileText, text: "My Orders", path: "/orders" },
     { icon: Heart, text: "My Likes", path: "/likes" },
     { icon: MapPin, text: "My Address", path: "/address" },
@@ -76,7 +80,7 @@ const ProfileMenu = () => {
         onClick={toggleMenu}
       >
         <User className="w-4 h-4 text-gray-600" />
-        <span className="font-medium text-gray-900">{userName}</span>
+        <span className="font-medium text-gray-900">{user.username}</span>
         {isHovered ? (
           <ChevronUp className="w-4 h-4 text-gray-600" />
         ) : (
