@@ -1,17 +1,6 @@
 import { Outlet, Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import Loader from "../Loader";
 
 export const AdminLayout = () => {
-  const navigate = useNavigate();
-  const { user, loading } = useSelector((state) => state.auth);
-
-  if (loading) return <Loader />;
-
-  if (!user || user.role !== "ADMIN") {
-    return navigate("/", { replace: true });
-  }
-
   return (
     <div className="flex flex-col h-screen overflow-hidden">
       {/* Main Content Area - takes remaining height */}
