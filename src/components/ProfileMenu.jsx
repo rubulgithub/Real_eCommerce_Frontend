@@ -80,7 +80,7 @@ const ProfileMenu = () => {
         onClick={toggleMenu}
       >
         <User className="w-4 h-4 text-gray-600" />
-        <span className="font-medium text-gray-900">{user.username}</span>
+        {/* <span className="font-medium text-gray-900">{user.username}</span> */}
         {isHovered ? (
           <ChevronUp className="w-4 h-4 text-gray-600" />
         ) : (
