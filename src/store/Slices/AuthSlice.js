@@ -15,7 +15,7 @@ export const registerUser = createAsyncThunk(
   "registerUser",
   async ({ email, username, password, confirmPassword, role }) => {
     try {
-      const response = await axiosInstance.post("api/v1/users/register", {
+      const response = await axiosInstance.post("/api/v1/users/register", {
         email,
         username,
         password,
@@ -39,7 +39,7 @@ export const registerUser = createAsyncThunk(
 
 export const userLogin = createAsyncThunk("login", async (data) => {
   try {
-    const response = await axiosInstance.post("api/v1/users/login", data);
+    const response = await axiosInstance.post("/api/v1/users/login", data);
     const { user } = response.data.data;
     toast.success("Logged in successfully");
     return user;
@@ -51,7 +51,7 @@ export const userLogin = createAsyncThunk("login", async (data) => {
 
 export const userLogout = createAsyncThunk("logout", async () => {
   try {
-    const response = await axiosInstance.post("api/v1/users/logout");
+    const response = await axiosInstance.post("/api/v1/users/logout");
 
     const { user } = response.data.data;
     console.log("data", user);
@@ -69,7 +69,7 @@ export const currentUser = createAsyncThunk(
   "currentUser",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get("api/v1/users/current-user");
+      const response = await axiosInstance.get("/api/v1/users/current-user");
       const currentUser = response.data.data;
       toast.success("Welcome Back!");
       return currentUser;
@@ -96,7 +96,7 @@ export const revalidateUser = createAsyncThunk(
 // Async thunk to handle email verification
 export const verifyEmail = createAsyncThunk("verifyEmail", async (token) => {
   try {
-    const response = await axiosInstance.get(`api/v1/verify-email/${token}`);
+    const response = await axiosInstance.get(`/api/v1/verify-email/${token}`);
     toast.success("Your email has been verified!");
     console.log("email verify response", response);
     return response.data;
@@ -114,7 +114,7 @@ export const getAllUsers = createAsyncThunk(
   async ({ page = 1, limit = 10, search = "" }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `api/v1/users/admin/users?page=${page}&limit=${limit}&search=${search}`
+        `/api/v1/users/admin/users?page=${page}&limit=${limit}&search=${search}`
       );
       return response.data;
     } catch (error) {
@@ -128,7 +128,7 @@ export const updateUserRole = createAsyncThunk(
   async ({ userId, role }, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.patch(
-        `api/v1/users/admin/users/${userId}/role`,
+        `/api/v1/users/admin/users/${userId}/role`,
         { role }
       );
       return response.data;
@@ -143,7 +143,7 @@ export const fetchUserStats = createAsyncThunk(
   async (period = "7d", { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(
-        `api/v1/users/admin/users/stats?period=${period}`
+        `/api/v1/users/admin/users/stats?period=${period}`
       );
       return response.data;
     } catch (error) {

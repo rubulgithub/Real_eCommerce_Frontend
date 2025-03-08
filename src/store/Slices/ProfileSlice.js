@@ -13,7 +13,7 @@ export const getUserProfile = createAsyncThunk(
   "getUserProfile",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get("api/v1/ecommerce/profile");
+      const response = await axiosInstance.get("/api/v1/ecommerce/profile");
       return response.data.data;
     } catch (error) {
       toast.error(error.response?.data?.message || "Error fetching profile");
@@ -28,7 +28,7 @@ export const updateUserProfile = createAsyncThunk(
   async (updatedProfile, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.patch(
-        "api/v1/ecommerce/profile",
+        "/api/v1/ecommerce/profile",
         updatedProfile
       );
       toast.success(
