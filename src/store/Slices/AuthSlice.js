@@ -72,7 +72,6 @@ export const currentUser = createAsyncThunk(
       const response = await axiosInstance.get("/api/v1/users/current-user");
       const currentUser = response.data.data;
       toast.success("Welcome Back!");
-      console.log("user", currentUser);
       return currentUser;
     } catch (error) {
       console.log("error", error);
