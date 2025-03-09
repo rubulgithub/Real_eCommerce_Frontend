@@ -113,8 +113,10 @@ export const getAllUsers = createAsyncThunk(
   "getAllUsers",
   async ({ page = 1, limit = 10, search = "" }, { rejectWithValue }) => {
     try {
+      // Ensure search is a string
+      const searchQuery = typeof search === "string" ? search : "";
       const response = await axiosInstance.get(
-        `/api/v1/users/admin/users?page=${page}&limit=${limit}&search=${search}`
+        `/api/v1/users/admin/users?page=${page}&limit=${limit}&search=${searchQuery}`
       );
       return response.data;
     } catch (error) {
@@ -127,9 +129,14 @@ export const updateUserRole = createAsyncThunk(
   "updateUserRole",
   async ({ userId, role }, { rejectWithValue }) => {
     try {
+      // Ensure userId and role are strings
+      const validUserId =
+        typeof userId === "string" ? userId : userId.toString();
+      const validRole = typeof role === "string" ? role : role.toString();
+
       const response = await axiosInstance.patch(
-        `/api/v1/users/admin/users/${String(userId)}/role`,
-        { role }
+        `/api/v1/users/admin/users/${validUserId}/role`,
+        { role: validRole }
       );
       return response.data;
     } catch (error) {
@@ -142,8 +149,10 @@ export const fetchUserStats = createAsyncThunk(
   "auth/fetchUserStats",
   async (period = "7d", { rejectWithValue }) => {
     try {
+      // Ensure period is a string
+      const validPeriod = typeof period === "string" ? period : "7d";
       const response = await axiosInstance.get(
-        `/api/v1/users/admin/users/stats?period=${period}`
+        `/api/v1/users/admin/users/stats?period=${validPeriod}`
       );
       return response.data;
     } catch (error) {
@@ -208,15 +217,20 @@ const authSlice = createSlice({
       })
       .addCase(getAllUsers.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.users = action.payload.data.users;
-        state.totalUsers = action.payload.data.totalUsers;
+        if (action.payload?.data?.users) {
+          state.users = action.payload.data.users;
+        }
+        if (action.payload?.data?.totalUsers) {
+          state.totalUsers = action.payload.data.totalUsers;
+        }
       })
       .addCase(getAllUsers.rejected, (state) => {
         state.isLoading = false;
       })
       .addCase(updateUserRole.fulfilled, (state, action) => {
-        if (state.user?._id === action.meta.arg.userId) {
-          state.user.role = action.meta.arg.role;
+        const { userId, role } = action.meta.arg;
+        if (state.user?._id === userId) {
+          state.user.role = role;
         }
       })
       .addCase(fetchUserStats.pending, (state, action) => {
@@ -224,7 +238,9 @@ const authSlice = createSlice({
       })
       .addCase(fetchUserStats.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.userStats = action.payload.data;
+        if (action.payload?.data) {
+          state.userStats = action.payload.data;
+        }
       });
   },
 });
