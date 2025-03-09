@@ -339,8 +339,18 @@ export const UsersDashboard = () => {
                   <TableCell>
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                       <Avatar
-                        src={user.avatar || `/api/placeholder/40/40`}
+                        src={
+                          user.avatar?.url &&
+                          user.avatar.url !==
+                            "https://via.placeholder.com/200x200.png"
+                            ? user.avatar.url
+                            : "/placeholder.png"
+                        }
                         sx={{ mr: 2 }}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "/images/avatar-placeholder.png"; // Fallback if the URL is broken
+                        }}
                       />
                       <Box>
                         <Typography variant="subtitle2">

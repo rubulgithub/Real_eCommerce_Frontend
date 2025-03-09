@@ -72,6 +72,7 @@ export const currentUser = createAsyncThunk(
       const response = await axiosInstance.get("/api/v1/users/current-user");
       const currentUser = response.data.data;
       toast.success("Welcome Back!");
+      console.log("user", currentUser);
       return currentUser;
     } catch (error) {
       console.log("error", error);
@@ -135,7 +136,7 @@ export const updateUserRole = createAsyncThunk(
       const validRole = typeof role === "string" ? role : role.toString();
 
       const response = await axiosInstance.patch(
-        `/api/v1/users/admin/users/${validUserId}/role`,
+        `/api/v1/users/admin/users/${validUserId}`,
         { role: validRole }
       );
       return response.data;
