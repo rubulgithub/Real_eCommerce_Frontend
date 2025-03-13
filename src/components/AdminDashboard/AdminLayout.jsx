@@ -1,4 +1,4 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { MenuIcon, XIcon } from "lucide-react";
 import ErrorBoundary from "../../helpers/ErrorBoundary"; // Add an error boundary component
@@ -11,6 +11,11 @@ export const AdminLayout = () => {
 
   // Function to check if a path is active
   const isActive = (path) => location.pathname.startsWith(path);
+
+  // Redirect to /admin/users if the current path is /admin
+  if (location.pathname === "/admin") {
+    return <Navigate to="/admin/users" replace />;
+  }
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
