@@ -129,14 +129,14 @@ export const updateUserRole = createAsyncThunk(
   "updateUserRole",
   async ({ userId, role }, { rejectWithValue }) => {
     try {
-      // Ensure userId and role are strings
-      const validUserId =
-        typeof userId === "string" ? userId : userId.toString();
-      const validRole = typeof role === "string" ? role : role.toString();
+      // // Ensure userId and role are strings
+      // const validUserId =
+      //   typeof userId === "string" ? userId : userId.toString();
+      // const validRole = typeof role === "string" ? role : role.toString();
 
       const response = await axiosInstance.patch(
-        `/api/v1/users/admin/users/${validUserId}`,
-        { role: validRole }
+        `/api/v1/users/admin/users/${userId}`,
+        { role: role }
       );
       return response.data;
     } catch (error) {
