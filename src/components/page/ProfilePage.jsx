@@ -37,7 +37,6 @@ export default function ProfileDesign() {
     lastName: "",
     phoneNumber: "",
     countryCode: "",
-    email: "",
   });
 
   // Fetch profile data on component mount
@@ -53,7 +52,6 @@ export default function ProfileDesign() {
         lastName: UserProfile.lastName || "",
         phoneNumber: UserProfile.phoneNumber || "",
         countryCode: UserProfile.countryCode || "",
-        email: UserProfile.email || "",
       });
     }
   }, [UserProfile]);
@@ -78,7 +76,6 @@ export default function ProfileDesign() {
         lastName: UserProfile.lastName || "",
         phoneNumber: UserProfile.phoneNumber || "",
         countryCode: UserProfile.countryCode || "",
-        email: UserProfile.email || "",
       });
     }
     setIsEditing(false);
@@ -297,9 +294,6 @@ export default function ProfileDesign() {
                     <div className="text-sm font-medium">
                       {formData.firstName || "User"} {formData.lastName}
                     </div>
-                    <div className="text-xs text-gray-500">
-                      {formData.email}
-                    </div>
                   </div>
                 </div>
 
@@ -382,12 +376,6 @@ export default function ProfileDesign() {
                       "lastName",
                       formData.lastName,
                       <User className="w-4 h-4" />
-                    )}
-                    {renderField(
-                      "Email",
-                      "email",
-                      formData.email,
-                      <Mail className="w-4 h-4" />
                     )}
                   </div>
 
