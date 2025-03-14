@@ -118,6 +118,7 @@ export const getAllUsers = createAsyncThunk(
       const response = await axiosInstance.get(
         `/api/v1/users/admin/users?page=${page}&limit=${limit}&search=${searchQuery}`
       );
+      console.log("All user:", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

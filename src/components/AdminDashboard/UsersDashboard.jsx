@@ -222,7 +222,7 @@ export const UsersDashboard = () => {
           }}
         >
           <Typography variant="body2" color="text.secondary">
-            Email:
+            Email
           </Typography>
           <Typography variant="body2">
             {user.email || "user@example.com"}
@@ -238,7 +238,7 @@ export const UsersDashboard = () => {
           }}
         >
           <Typography variant="body2" color="text.secondary">
-            Joined:
+            Joined
           </Typography>
           <Typography variant="body2">
             {new Date(user.createdAt).toLocaleDateString() || "Jan 15, 2024"}
@@ -253,7 +253,7 @@ export const UsersDashboard = () => {
           }}
         >
           <Typography variant="body2" color="text.secondary">
-            Role:
+            Role
           </Typography>
           {updatingUserId === user._id ? (
             <CircularProgress size={24} />
