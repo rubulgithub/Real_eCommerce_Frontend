@@ -1,4 +1,3 @@
-// components/GoogleSSOButton.jsx
 import React from "react";
 
 function GoogleSSOButton({ variant = "light", onClick }) {
