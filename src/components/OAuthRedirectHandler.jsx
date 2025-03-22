@@ -8,7 +8,7 @@ const OAuthRedirectHandler = () => {
   useEffect(() => {
     // Redirect to the profile page
     toast.success("Successfully authenticated with Google");
-    navigate("/profile-page");
+    navigate("/profile");
   }, [navigate]);
 
   return <div>Loading...</div>;
