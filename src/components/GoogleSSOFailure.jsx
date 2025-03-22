@@ -1,6 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { XCircle } from "lucide-react";
-
 const AuthFailure = () => {
   const [error, setError] = useState("");
 
@@ -11,7 +8,7 @@ const AuthFailure = () => {
   }, []);
 
   const handleRetry = () => {
-    // Replace this with your actual authentication retry logic
+    // Redirect to the signup page
     window.location.href = "/signup";
   };
 

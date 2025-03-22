@@ -1,5 +1,3 @@
-import React from "react";
-
 function GoogleSSOButton({ variant = "light", onClick }) {
   const googlesignup = () => {
     // Redirect the user to your backend's Google auth route
