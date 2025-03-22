@@ -9,10 +9,8 @@ const OAuthRedirectHandler = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axiosInstance.get("/api/v1/users/current-user");
-        console.log("User data:", response.data);
         toast.success("Successfully authenticated with Google");
-        navigate("/profile");
+        navigate("/");
       } catch (error) {
         console.error("Error fetching user:", error);
         if (error.response.status === 401) {
